@@ -2,11 +2,10 @@
 	"name": "backend",
 	"version": "1.0.0",
 	"description": "",
-	"main": "backend/server.js",
+	"main": "index.js",
 	"scripts": {
-		"build": "cd frontend && yarn && yarn build",
-		"start": "nodemon --watch backend --exec node --experimental-modules backend/server.js",
-		"dev": "nodemon backend/server.js"
+		"start": "nodemon --watch backend --exec node --experimental-modules index.js",
+		"dev": "nodemon index.js"
 	},
 	"author": "",
 	"license": "ISC",
