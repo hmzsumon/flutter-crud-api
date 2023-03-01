@@ -1,12 +1,40 @@
-const express = require('express');
-const app = express();
+const app = require('./backend/app');
 
-// test route
-app.get('/', (req, res) => {
-	res.send('Hello World Vercel!');
+const cloudinary = require('cloudinary');
+const connectDB = require('./backend/config/db');
+
+// Handling Uncaught Exception
+process.on('uncaughtException', (err) => {
+	console.log(`Error: ${err.message}`);
+	console.log(`Shutting down the server due to Uncaught Exception`);
+	process.exit(1);
 });
 
-// start server
-app.listen(3000, () => {
-	console.log('Server started on port 3000');
+// Config
+if (process.env.NODE_ENV !== 'PRODUCTION') {
+	require('dotenv').config({ path: 'backend/config/config.env' });
+}
+
+// database connection
+connectDB();
+
+//cloudinary
+cloudinary.config({
+	cloud_name: process.env.CLOUDINARY_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const server = app.listen(process.env.PORT, () => {
+	console.log(`Server is working on http://localhost:${process.env.PORT}`);
+});
+
+// Unhandled Promise Rejection
+process.on('unhandledRejection', (err) => {
+	console.log(`Error: ${err.message}`);
+	console.log(`Shutting down the server due to Unhandled Promise Rejection`);
+
+	server.close(() => {
+		process.exit(1);
+	});
 });
